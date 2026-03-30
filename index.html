@@ -865,46 +865,21 @@
       fhEl.appendChild(h);
     }
 
-    /* ── YouTube Music via IFrame API ── */
+    /* ── Music via local audio file ── */
     const musicBtn = document.getElementById('musicBtn');
-    let ytPlayer = null;
+    const audio = new Audio('аудио/music.mp3');
+    audio.loop = true;
+    audio.volume = 0.6;
     let isPlaying = false;
 
-    // Load YT API
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-
-    // Hidden container for YT player
-    const ytDiv = document.createElement('div');
-    ytDiv.id = 'ytPlayerDiv';
-    ytDiv.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;';
-    document.body.appendChild(ytDiv);
-
-    window.onYouTubeIframeAPIReady = function() {
-      ytPlayer = new YT.Player('ytPlayerDiv', {
-        videoId: 'K3Qzzggn--s',
-        playerVars: { autoplay: 0, loop: 1, playlist: 'K3Qzzggn--s', controls: 0 },
-        events: {
-          onReady: function() {
-            ytPlayer.setVolume(60);
-          },
-          onStateChange: function(e) {
-            if (e.data === YT.PlayerState.ENDED) ytPlayer.playVideo();
-          }
-        }
-      });
-    };
-
     musicBtn.addEventListener('click', function(e) {
-      if (!ytPlayer) return;
       if (isPlaying) {
-        ytPlayer.pauseVideo();
+        audio.pause();
         isPlaying = false;
         musicBtn.textContent = '♪';
         musicBtn.classList.remove('playing');
       } else {
-        ytPlayer.playVideo();
+        audio.play();
         isPlaying = true;
         musicBtn.textContent = '♫';
         musicBtn.classList.add('playing');
@@ -915,8 +890,8 @@
     /* ── Welcome modal handler ── */
     document.getElementById('welcomeBtn').addEventListener('click', function() {
       // Start music
-      if (ytPlayer && !isPlaying) {
-        ytPlayer.playVideo();
+      if (!isPlaying) {
+        audio.play();
         isPlaying = true;
         musicBtn.textContent = '♫';
         musicBtn.classList.add('playing');
