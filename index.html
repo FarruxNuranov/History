@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Моя любовь к Азиме</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap');
+
+    :root {
+      --sakura:   #ffb7c5;
+      --sakura2:  #ff8fab;
+      --sakura3:  #ffd6e0;
+      --sakura4:  #f4a7b9;
+      --deep:     #c9476b;
+      --bg:       #08080e;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Lato', sans-serif;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* ── Stars ── */
+    .stars {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+    }
+    .star {
+      position: absolute; background: #fff; border-radius: 50%;
+      animation: twinkle var(--d) ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity:.08; transform:scale(1); }
+      to   { opacity:.9;  transform:scale(1.5); }
+    }
+
+    /* ── Floating kanji ── */
+    .kanji-layer {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .kanji {
+      position: absolute;
+      font-size: var(--ks);
+      color: var(--sakura);
+      opacity: 0;
+      animation: kanjiFloat var(--kd) ease-in-out infinite;
+      animation-delay: var(--kdelay);
+      font-weight: 300;
+      text-shadow: 0 0 20px rgba(255,183,197,0.4);
+    }
+    @keyframes kanjiFloat {
+      0%   { opacity:0;    transform: translateY(100vh) rotate(var(--kr1)); }
+      10%  { opacity:0.15; }
+      90%  { opacity:0.08; }
+      100% { opacity:0;    transform: translateY(-20vh) rotate(var(--kr2)); }
+    }
+
+    /* ── Sakura petals ── */
+    .petals-layer {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      top: -30px;
+      font-size: var(--ps);
+      animation: petalFall var(--pd) linear infinite;
+      animation-delay: var(--pdelay);
+      opacity: 0;
+    }
+    @keyframes petalFall {
+      0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity:0; }
+      8%   { opacity:.85; }
+      92%  { opacity:.4; }
+      100% { transform: translateY(110vh) rotate(540deg) translateX(var(--px)); opacity:0; }
+    }
+
+    /* ── Floating hearts ── */
+    .floating-hearts {
+      position: fixed; bottom:0; left:0;
+      width:100%; height:100%;
+      pointer-events: none; z-index: 0;
+    }
+    .fh {
+      position: absolute; bottom: -40px;
+      font-size: var(--s);
+      animation: floatUp var(--d) ease-in infinite;
+      animation-delay: var(--delay);
+      opacity: 0;
+    }
+    @keyframes floatUp {
+      0%   { transform:translateY(0) rotate(0deg); opacity:0; }
+      10%  { opacity:.6; }
+      90%  { opacity:.2; }
+      100% { transform:translateY(-110vh) rotate(360deg); opacity:0; }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 2rem 1.2rem;
+    }
+
+    .jp-title {
+      font-size: clamp(0.7rem, 3vw, 1rem);
+      letter-spacing: 0.4em;
+      color: var(--sakura4);
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+
+    .heart-big {
+      font-size: clamp(3.5rem, 15vw, 6rem);
+      animation: heartbeat 1.4s ease-in-out infinite;
+      display: block; margin-bottom: 1rem;
+      filter: drop-shadow(0 0 20px var(--deep));
+    }
+    @keyframes heartbeat {
+      0%,100% { transform:scale(1); }
+      14%     { transform:scale(1.2); }
+      28%     { transform:scale(1); }
+      42%     { transform:scale(1.15); }
+      56%     { transform:scale(1); }
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 8vw, 5rem);
+      background: linear-gradient(135deg, var(--sakura3), var(--sakura2), var(--sakura));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2; margin-bottom: 0.8rem;
+    }
+
+    .hero-kanji {
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      color: var(--sakura4);
+      opacity: 0.5;
+      letter-spacing: 0.3em;
+      margin-bottom: 1rem;
+    }
+
+    .hero p.sub {
+      font-size: clamp(0.85rem, 3.5vw, 1.3rem);
+      font-weight: 300; color: #c9b0d0;
+      letter-spacing: 0.05em;
+      max-width: 420px; margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .scroll-hint {
+      font-size: 0.75rem; color: #7a6b80;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform:translateY(0); }
+      50%     { transform:translateY(8px); }
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 50px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--sakura2), transparent);
+      margin: 0 auto 2.5rem;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Section base ── */
+    section {
+      position: relative; z-index: 1;
+      padding: clamp(40px, 8vw, 80px) clamp(1rem, 5vw, 2rem);
+      max-width: 820px; margin: 0 auto;
+      width: 100%;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 5vw, 2.4rem);
+      color: var(--sakura); margin-bottom: 0.4rem;
+      text-align: center;
+    }
+
+    .section-jp {
+      text-align: center;
+      font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+      letter-spacing: 0.3em;
+      color: var(--sakura4); opacity: 0.5;
+      margin-bottom: 1.8rem;
+    }
+
+    /* ── Floating words ── */
+    .float-section {
+      position: relative;
+      height: clamp(320px, 60vw, 520px);
+      overflow: hidden;
+    }
+    .float-word {
+      position: absolute; text-align: center;
+      pointer-events: none;
+      animation: floatWord var(--fd) ease-in-out infinite alternate;
+      animation-delay: var(--fdelay);
+    }
+    .float-word .icon {
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      display: block; margin-bottom: 0.3rem;
+      filter: drop-shadow(0 0 8px rgba(232,121,163,0.6));
+    }
+    .float-word h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.85rem, 3vw, 1.1rem);
+      color: var(--sakura); margin-bottom: 0.2rem;
+      text-shadow: 0 0 12px rgba(232,121,163,0.5);
+    }
+    .float-word p {
+      font-size: clamp(0.7rem, 2.5vw, 0.82rem);
+      color: #b8a0c0; line-height: 1.5;
+      max-width: clamp(120px, 30vw, 170px);
+    }
+    @keyframes floatWord {
+      0%   { transform:translateY(0) rotate(var(--rot1)); opacity:.7; }
+      50%  { opacity:1; }
+      100% { transform:translateY(var(--ty)) rotate(var(--rot2)); opacity:.8; }
+    }
+
+    /* ── Letter ── */
+    .letter {
+      background: rgba(255,183,197,0.04);
+      border-left: 3px solid var(--sakura2);
+      border-radius: 0 16px 16px 0;
+      padding: clamp(1.2rem, 5vw, 2.4rem) clamp(1rem, 5vw, 2rem);
+      font-size: clamp(0.9rem, 3.5vw, 1.05rem);
+      line-height: 1.9; color: #d4bfda; font-style: italic;
+      position: relative;
+    }
+    .letter strong { color: var(--sakura); font-style: normal; }
+
+    .letter-wrap {
+      position: relative;
+    }
+    .letter-layer {
+      transition: opacity 0.6s ease;
+    }
+    .letter-layer:nth-child(2) {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+    }
+
+    /* ── Cinema ── */
+    .cinema-wrap {
+      position: relative; width: 100%;
+      height: 100svh; overflow: hidden; background: #000;
+    }
+
+    .letterbox {
+      position: absolute; left:0; right:0;
+      height: clamp(40px, 8vw, 80px);
+      background: #000; z-index: 10;
+    }
+    .letterbox.top    { top:0; }
+    .letterbox.bottom { bottom:0; }
+
+    .film-grain {
+      position: absolute; inset:0;
+      width:100%; height:100%;
+      z-index: 9; opacity:.05; pointer-events:none;
+    }
+
+    .scene {
+      position: absolute; inset:0;
+      display: flex; align-items: center; justify-content: center;
+      opacity:0; transform:scale(1.06);
+      transition: opacity 1.2s cubic-bezier(.4,0,.2,1),
+                  transform 1.4s cubic-bezier(.4,0,.2,1);
+      pointer-events: none;
+    }
+    .scene.active {
+      opacity:1; transform:scale(1); pointer-events:auto;
+    }
+    .scene.exit-left {
+      opacity:0; transform:scale(0.94) translateX(-4%);
+      transition: opacity .9s ease, transform 1s ease;
+    }
+    .scene.exit-right {
+      opacity:0; transform:scale(0.94) translateX(4%);
+      transition: opacity .9s ease, transform 1s ease;
+    }
+
+    .scene-bg { position:absolute; inset:0; z-index:0; }
+
+    .scene-content {
+      position: relative; z-index:5;
+      text-align: center;
+      padding: 0 clamp(1rem, 6vw, 3rem);
+      max-width: 600px; width:100%;
+    }
+
+    .scene-kanji {
+      font-size: clamp(1.5rem, 8vw, 3.5rem);
+      color: var(--sakura3); opacity:0.18;
+      letter-spacing: 0.2em; margin-bottom:0.5rem;
+      display:block;
+    }
+    .scene.active .scene-kanji { opacity:0.22; transition: opacity 1s 0.3s ease; }
+
+    .chapter-label {
+      font-size: clamp(0.6rem, 2vw, 0.75rem);
+      letter-spacing: 0.35em; text-transform:uppercase;
+      color: var(--sakura2); margin-bottom:.8rem;
+      opacity:0; transform:translateY(14px);
+      transition: opacity .7s .5s ease, transform .7s .5s ease;
+    }
+    .scene.active .chapter-label { opacity:1; transform:translateY(0); }
+
+    .scene-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 7vw, 4rem);
+      color:#fff; line-height:1.15; margin-bottom:1rem;
+      opacity:0; transform:translateY(24px);
+      transition: opacity .9s .8s ease, transform .9s .8s ease;
+      text-shadow: 0 2px 30px rgba(255,143,171,0.4);
+    }
+    .scene.active .scene-title { opacity:1; transform:translateY(0); }
+
+    .scene-line {
+      width:0; height:1px;
+      background: linear-gradient(to right, transparent, var(--sakura2), transparent);
+      margin: .8rem auto 1rem;
+      transition: width .9s 1.2s ease;
+    }
+    .scene.active .scene-line { width: clamp(100px, 40vw, 200px); }
+
+    .scene-text {
+      font-size: clamp(0.85rem, 3vw, 1.2rem);
+      color: #d4b8d0; line-height:1.8; font-weight:300;
+      opacity:0; transform:translateY(16px);
+      transition: opacity .9s 1.4s ease, transform .9s 1.4s ease;
+    }
+    .scene.active .scene-text { opacity:1; transform:translateY(0); }
+
+    /* Auto progress bar */
+    .progress-bar {
+      position: absolute; bottom: clamp(40px,8vw,80px);
+      left:0; width:0%; height:3px;
+      background: linear-gradient(to right, var(--sakura4), var(--sakura));
+      z-index: 20;
+      transition: width linear;
+      box-shadow: 0 0 8px var(--sakura2);
+    }
+
+    /* Dots */
+    .cinema-dots {
+      position: absolute;
+      bottom: clamp(50px,10vw,100px);
+      left:50%; transform:translateX(-50%);
+      z-index:20; display:flex; gap:8px;
+      align-items: center;
+    }
+    .dot {
+      width:7px; height:7px; border-radius:50%;
+      background: rgba(255,183,197,0.25);
+      cursor:pointer;
+      transition: background .3s, transform .3s;
+    }
+    .dot.active {
+      background: var(--sakura2);
+      transform: scale(1.5);
+      box-shadow: 0 0 8px var(--sakura2);
+    }
+
+    /* Dust */
+    .scene-dust { position:absolute; inset:0; z-index:2; pointer-events:none; }
+    .dust-p {
+      position:absolute; border-radius:50%;
+      animation: dustFloat var(--dd) ease-in-out infinite alternate;
+      animation-delay: var(--ddelay);
+    }
+    @keyframes dustFloat {
+      from { transform:translateY(0) translateX(0); opacity:var(--op1); }
+      to   { transform:translateY(var(--dty)) translateX(var(--dtx)); opacity:var(--op2); }
+    }
+
+    .flash-overlay {
+      position:absolute; inset:0; background:#fff;
+      z-index:30; opacity:0; pointer-events:none;
+    }
+    .flash-overlay.flash { opacity:0.07; }
+
+    /* ── Promise ── */
+    .promise-box {
+      background: linear-gradient(135deg,
+        rgba(255,143,171,0.1), rgba(244,167,185,0.08));
+      border: 1px solid rgba(255,183,197,0.2);
+      border-radius: 20px;
+      padding: clamp(1.5rem, 6vw, 3rem) clamp(1rem, 5vw, 2rem);
+      text-align:center;
+    }
+    .promise-jp {
+      font-size: clamp(1rem, 4vw, 1.6rem);
+      color: var(--sakura3); opacity:.3;
+      letter-spacing:.3em; margin-bottom:1.2rem;
+    }
+    .promise-box p {
+      font-family:'Playfair Display', serif;
+      font-size: clamp(0.95rem, 3vw, 1.4rem);
+      color:#fce7f3; line-height:1.9;
+    }
+    .promise-box .signature {
+      margin-top:1.5rem; font-size:.95rem;
+      color: var(--sakura4); letter-spacing:.05em;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position:relative; z-index:1;
+      text-align:center;
+      padding: 2rem 1rem 5rem;
+      color:#4a3a50; font-size:.8rem; letter-spacing:.1em;
+    }
+
+    /* ── Story Section ── */
+    .story-section {
+      max-width: 860px;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(1.2rem, 4vw, 2rem);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .story-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(255,183,197,0.10), rgba(180,80,120,0.07));
+      border: 1px solid rgba(255, 143, 171, 0.35);
+      border-radius: 20px;
+      padding: clamp(1.4rem, 5vw, 2rem) clamp(1.2rem, 4vw, 1.8rem);
+      overflow: hidden;
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+    .story-card:hover {
+      box-shadow: 0 12px 40px rgba(255, 100, 150, 0.2);
+      border-color: rgba(255, 143, 171, 0.6);
+    }
+
+    .story-kanji {
+      position: absolute;
+      top: -10px; right: 14px;
+      font-size: clamp(3rem, 10vw, 5rem);
+      color: var(--sakura);
+      opacity: 0.07;
+      font-weight: 700;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .story-chapter {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--sakura2);
+      margin-bottom: 0.7rem;
+    }
+
+    .story-icon {
+      font-size: clamp(1.6rem, 5vw, 2rem);
+      margin-bottom: 0.6rem;
+      display: block;
+      filter: drop-shadow(0 0 8px rgba(255,143,171,0.5));
+    }
+
+    .story-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 4vw, 1.35rem);
+      color: var(--sakura3);
+      margin-bottom: 0.8rem;
+      line-height: 1.3;
+    }
+
+    .story-text {
+      font-size: clamp(0.82rem, 3vw, 0.95rem);
+      color: #b8a0c0;
+      line-height: 1.75;
+    }
+
+    /* ── Promise fade switch ── */
+    .promise-fade {
+      transition: opacity 0.6s ease;
+    }
+    .promise-fade.hidden {
+      opacity: 0;
+    }
+
+    /* ── Music controls ── */
+    .music-wrap {
+      position: fixed;
+      bottom: 1.8rem;
+      right: 1.4rem;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .music-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,143,171,0.4);
+      background: rgba(255,183,197,0.12);
+      color: var(--sakura);
+      font-size: 1.3rem;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .music-btn:hover {
+      background: rgba(255,143,171,0.25);
+      box-shadow: 0 0 16px rgba(255,143,171,0.4);
+    }
+    .music-btn.playing {
+      animation: musicPulse 1.8s ease-in-out infinite;
+      box-shadow: 0 0 20px rgba(255,143,171,0.5);
+      background: rgba(255,143,171,0.2);
+    }
+    @keyframes musicPulse {
+      0%,100% { transform: scale(1); }
+      50%      { transform: scale(1.12); }
+    }
+
+    /* ── Welcome modal ── */
+    .welcome-overlay {
+      position: fixed; inset: 0;
+      z-index: 9999;
+      background: rgba(4, 4, 10, 0.95);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.8s ease;
+    }
+    .welcome-overlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .welcome-box {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 90%;
+    }
+    .welcome-kanji {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      color: var(--sakura3);
+      opacity: 0.2;
+      letter-spacing: 0.3em;
+      margin-bottom: 1rem;
+    }
+    .welcome-heart {
+      font-size: clamp(2.5rem, 10vw, 4rem);
+      display: block;
+      margin-bottom: 1.2rem;
+      animation: heartbeat 1.4s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px var(--deep));
+    }
+    .welcome-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 5vw, 2rem);
+      background: linear-gradient(135deg, var(--sakura3), var(--sakura2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.8rem;
+    }
+    .welcome-text {
+      font-size: clamp(0.8rem, 3vw, 1rem);
+      color: #b8a0c0;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+    .welcome-btn {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 4vw, 1.3rem);
+      color: #fff;
+      background: linear-gradient(135deg, var(--sakura2), var(--deep));
+      border: none;
+      border-radius: 50px;
+      padding: 0.9rem 2.8rem;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 25px rgba(201,71,107,0.4);
+    }
+    .welcome-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 35px rgba(201,71,107,0.6);
+    }
+    .welcome-note {
+      font-size: 0.65rem;
+      color: var(--sakura4);
+      opacity: 0.4;
+      margin-top: 1.2rem;
+      letter-spacing: 0.15em;
+    }
+
+    /* ── Mobile tweaks ── */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 1.7rem; }
+      .float-section { height: 280px; }
+      .float-word p { max-width: 100px; font-size: 0.65rem; }
+      .float-word h3 { font-size: 0.8rem; }
+      .scene-title { font-size: 1.5rem; }
+      .letter { font-size: 0.85rem; padding: 1rem; }
+      .promise-box p { font-size: 0.88rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Welcome modal -->
+  <div class="welcome-overlay" id="welcomeOverlay">
+    <div class="welcome-box">
+      <div class="welcome-kanji">愛 · 物語</div>
+      <span class="welcome-heart">♥</span>
+      <h2 class="welcome-title">Это для тебя</h2>
+      <p class="welcome-text">
+        Включи звук, читай и чувствуй.<br>
+        Здесь каждое слово — про нас.
+      </p>
+      <button class="welcome-btn" id="welcomeBtn">Поехали ♪</button>
+      <div class="welcome-note">🎧 Joji — SLOW DANCING IN THE DARK</div>
+    </div>
+  </div>
+
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Kanji layer -->
+  <div class="kanji-layer" id="kanjiLayer"></div>
+
+  <!-- Sakura petals -->
+  <div class="petals-layer" id="petalsLayer"></div>
+
+  <!-- Floating hearts -->
+  <div class="floating-hearts" id="fhearts"></div>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="jp-title">愛 · さくら · 永遠</div>
+    <span class="heart-big">♥</span>
+    <h1>Azima,<br>君は僕の宇宙</h1>
+    <div class="hero-kanji">愛してる</div>
+    <p class="sub">君と過ごす毎日は贈り物。<br>僕は永遠にそれを大切にする。</p>
+    <span class="scroll-hint">↓ 下にスクロール ↓</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── ПОЧЕМУ ЛЮБЛЮ ── -->
+  <section style="max-width:900px;">
+    <h2 class="section-title">君が僕のものである理由</h2>
+    <div class="section-jp">理由 · 愛の理由</div>
+    <div class="float-section">
+      <div class="float-word" style="left:4%; top:8%; --fd:4.2s; --fdelay:0s; --ty:-28px; --rot1:-3deg; --rot2:3deg;">
+        <span class="icon">🌸</span>
+        <h3>君の雰囲気</h3>
+        <p>君の日本風の美しいプロフィール — 一目惚れした。</p>
+      </div>
+      <div class="float-word" style="left:52%; top:4%; --fd:5.1s; --fdelay:-1.5s; --ty:-38px; --rot1:2deg; --rot2:-4deg;">
+        <span class="icon">✨</span>
+        <h3>君の返事</h3>
+        <p>二時間の希望 — そして奇跡が起きた。君が返事をくれた。</p>
+      </div>
+      <div class="float-word" style="left:8%; top:54%; --fd:3.8s; --fdelay:-2.8s; --ty:-22px; --rot1:-2deg; --rot2:5deg;">
+        <span class="icon">❄️</span>
+        <h3>寒さの中の四時間</h3>
+        <p>僕たちは歩き続け、寒さに気づかなかった。僕たちだけの世界だった。</p>
+      </div>
+      <div class="float-word" style="left:56%; top:48%; --fd:4.7s; --fdelay:-0.8s; --ty:-32px; --rot1:4deg; --rot2:-2deg;">
+        <span class="icon">💫</span>
+        <h3>運命の人</h3>
+        <p>最初の瞬間から分かっていた — 君こそ僕が待っていた人だと。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── ПИСЬМО ── -->
+  <section>
+    <h2 class="section-title">君への手紙</h2>
+    <div class="section-jp">手紙 · tegami</div>
+    <div class="letter-wrap">
+      <div class="letter letter-layer" id="letterRU"></div>
+      <div class="letter letter-layer" id="letterJP" style="opacity:0;pointer-events:none;"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── НАША ИСТОРИЯ ── -->
+  <section class="story-section">
+    <h2 class="section-title">Наша история</h2>
+    <div class="section-jp">物語 · monogatari</div>
+
+    <div class="story-grid">
+
+      <div class="story-card">
+        <div class="story-kanji">運命</div>
+        <div class="story-chapter">✦ Глава I ✦</div>
+        <div class="story-icon">🌸</div>
+        <h3 class="story-title">Другое измерение</h3>
+        <p class="story-text">
+          彼女のInstagramを見た瞬間 — まるで別の次元に飛び込んだようだった。
+          迷わず分かった：この人だ。僕の運命の人。すぐに友達に追加し、
+          親しい友達に入れ、お気に入りに登録した… 素通りなんてできなかった。
+          彼女のプロフィールには美しく、雰囲気のある、日本風のスタイルがあった —
+          とても特別な何か。僕は恋に落ちた。
+          そしてまさにその時、二度目に、心の中で確信した — 彼女は僕のものだと。
+        </p>
+      </div>
+
+      <div class="story-card">
+        <div class="story-kanji">勇気</div>
+        <div class="story-chapter">✦ Глава II ✦</div>
+        <div class="story-icon">💌</div>
+        <h3 class="story-title">Я решился написать</h3>
+        <p class="story-text">
+          彼女にメッセージを送る決心をした。ありきたりな「こんにちは」は書かなかった…
+          彼女がどれほど美しいか、彼女のプロフィールがどれほど素晴らしいか、
+          その雰囲気について書いた。でも数分後、僕は落ち込んだ。
+          返事はもらえない、僕のメッセージはリクエストに埋もれたままだろう
+          と思った… でも気持ちを立て直し、静かに奇跡を信じ始めた。
+        </p>
+      </div>
+
+      <div class="story-card">
+        <div class="story-kanji">奇跡</div>
+        <div class="story-chapter">✦ Глава III ✦</div>
+        <div class="story-icon">✨</div>
+        <h3 class="story-title">И вы не поверите — чудо произошло</h3>
+        <p class="story-text">
+          二時間後、彼女は返事をくれた。「ありがとう、とても嬉しいです」と。
+          そこから僕たちの最初の会話が始まった。
+          僕はFaraだと名乗り、彼女も名前を教えてくれた…
+          そしてTelegramで会話を続けようと提案した。
+          こうして僕たちの物語が始まった。
+        </p>
+      </div>
+
+      <div class="story-card">
+        <div class="story-kanji">出会い</div>
+        <div class="story-chapter">✦ Глава IV ✦</div>
+        <div class="story-icon">❄️</div>
+        <h3 class="story-title">Наша первая встреча</h3>
+        <p class="story-text">
+          会う約束をして、僕はとても嬉しかった。実際に会った時、
+          僕の心臓はさらに強く鳴り響いた。僕たちの会話の中で一度も
+          彼女が僕の運命の人じゃないと疑ったことはなかった。彼女こそ
+          僕が一生待ち続けた人だと信じていた。四時間も歩いた。
+          とても寒かったけど、僕たちには関係なかった。時間が止まったようだった。
+          それから彼女を家まで送り、僕たちは別れた…
+          これは僕たちの物語のほんの一部に過ぎない。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── ОБЕЩАНИЕ ── -->
+  <section>
+    <div class="promise-box">
+      <div class="promise-jp">愛 · 桜 · 幸せ</div>
+      <p id="promiseText" class="promise-fade"></p>
+      <div class="signature">— Fara ♥ &nbsp;·&nbsp; 愛してる</div>
+    </div>
+  </section>
+
+  <footer></footer>
+
+  <!-- Music -->
+  <div class="music-wrap">
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <span style="font-size:0.55rem;color:var(--sakura4);opacity:0.6;text-align:center;line-height:1.2;">Joji — SLOW DANCING<br>IN THE DARK</span>
+      <button class="music-btn" id="musicBtn" title="Играть / пауза">♪</button>
+    </div>
+  </div>
+
+  <script>
+    /* ── Stars ── */
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 140; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const sz = Math.random()*2.2+0.4;
+      s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*3+1.5).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s;`;
+      starsEl.appendChild(s);
+    }
+
+    /* ── Kanji ── */
+    const kanji = ['愛','桜','心','美','花','永遠','幸せ','夢','星','月','恋','命','光','風','空'];
+    const kanjiEl = document.getElementById('kanjiLayer');
+    for (let i = 0; i < 14; i++) {
+      const k = document.createElement('div');
+      k.className = 'kanji';
+      k.textContent = kanji[i % kanji.length];
+      const sz = (Math.random()*2+1).toFixed(1);
+      k.style.cssText = `
+        left:${Math.random()*90+2}%;
+        --ks:${sz}rem;
+        --kd:${(Math.random()*18+14).toFixed(1)}s;
+        --kdelay:${(Math.random()*12).toFixed(1)}s;
+        --kr1:${(Math.random()*20-10).toFixed(0)}deg;
+        --kr2:${(Math.random()*20-10).toFixed(0)}deg;
+      `;
+      kanjiEl.appendChild(k);
+    }
+
+    /* ── Sakura petals ── */
+    const petalsEl = document.getElementById('petalsLayer');
+    const petalChars = ['🌸','🌺','✿','❀'];
+    for (let i = 0; i < 16; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = petalChars[Math.floor(Math.random()*petalChars.length)];
+      const sz = (Math.random()*1+0.7).toFixed(1);
+      p.style.cssText = `
+        left:${Math.random()*100}%;
+        --ps:${sz}rem;
+        --pd:${(Math.random()*10+8).toFixed(1)}s;
+        --pdelay:${(Math.random()*12).toFixed(1)}s;
+        --px:${(Math.random()*80-40).toFixed(0)}px;
+      `;
+      petalsEl.appendChild(p);
+    }
+
+    /* ── Floating hearts ── */
+    const fhEl = document.getElementById('fhearts');
+    const heartChars = ['♥','♡','❤','💕','💗','💖','💝'];
+    for (let i = 0; i < 14; i++) {
+      const h = document.createElement('div');
+      h.className = 'fh';
+      h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+      const sz = (Math.random()*1.2+0.7).toFixed(1);
+      h.style.cssText = `--s:${sz}rem;--d:${(Math.random()*8+6).toFixed(1)}s;--delay:${(Math.random()*10).toFixed(1)}s;left:${Math.random()*100}%;color:hsl(${Math.floor(Math.random()*40+330)},80%,72%);`;
+      fhEl.appendChild(h);
+    }
+
+    /* ── YouTube Music via IFrame API ── */
+    const musicBtn = document.getElementById('musicBtn');
+    let ytPlayer = null;
+    let isPlaying = false;
+
+    // Load YT API
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+
+    // Hidden container for YT player
+    const ytDiv = document.createElement('div');
+    ytDiv.id = 'ytPlayerDiv';
+    ytDiv.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;';
+    document.body.appendChild(ytDiv);
+
+    window.onYouTubeIframeAPIReady = function() {
+      ytPlayer = new YT.Player('ytPlayerDiv', {
+        videoId: 'K3Qzzggn--s',
+        playerVars: { autoplay: 0, loop: 1, playlist: 'K3Qzzggn--s', controls: 0 },
+        events: {
+          onReady: function() {
+            ytPlayer.setVolume(60);
+          },
+          onStateChange: function(e) {
+            if (e.data === YT.PlayerState.ENDED) ytPlayer.playVideo();
+          }
+        }
+      });
+    };
+
+    musicBtn.addEventListener('click', function(e) {
+      if (!ytPlayer) return;
+      if (isPlaying) {
+        ytPlayer.pauseVideo();
+        isPlaying = false;
+        musicBtn.textContent = '♪';
+        musicBtn.classList.remove('playing');
+      } else {
+        ytPlayer.playVideo();
+        isPlaying = true;
+        musicBtn.textContent = '♫';
+        musicBtn.classList.add('playing');
+      }
+      e.stopPropagation();
+    });
+
+    /* ── Welcome modal handler ── */
+    document.getElementById('welcomeBtn').addEventListener('click', function() {
+      // Start music
+      if (ytPlayer && !isPlaying) {
+        ytPlayer.playVideo();
+        isPlaying = true;
+        musicBtn.textContent = '♫';
+        musicBtn.classList.add('playing');
+      }
+      // Fade out modal
+      const overlay = document.getElementById('welcomeOverlay');
+      overlay.classList.add('fade-out');
+      setTimeout(() => overlay.remove(), 800);
+    });
+
+    /* ── Letter text switcher ── */
+    const letterRU = `<strong>Моя дорогая Azima,</strong><br><br>
+Ты — моё самое настоящее чудо. То, что ты есть в моей жизни — это невероятный подарок,
+который я буду ценить каждый день. Ты делаешь мой мир ярче, теплее и красивее
+просто тем, что ты существуешь.<br><br>
+Я люблю тебя так сильно, что иногда не хватает слов. Люблю твою улыбку,
+твой голос, твои глаза, в которых я вижу целую вселенную.
+Люблю то, какая ты — нежная, красивая, особенная. <strong>Ты — лучшее, что случилось со мной.</strong><br><br>
+Я хочу быть рядом с тобой в каждом моменте — в радости и в тишине,
+в солнечные дни и в холодные вечера. Хочу засыпать с мыслями о тебе
+и просыпаться зная, что ты моя.<br><br>
+Пусть каждый твой день будет наполнен счастьем, теплом и любовью.
+Пусть ты всегда чувствуешь, как сильно тебя любят.
+Потому что я буду любить тебя — <strong>искренне, бесконечно и навсегда.</strong><br><br>
+Ты моя Azima. Ты моё всё. ♥ &nbsp;·&nbsp; 永遠に`;
+
+    const letterJP = `<strong>愛しいAzimaへ、</strong><br><br>
+君は僕にとって本当の奇跡だ。君が僕の人生にいること —
+それは毎日大切にする、信じられないほどの贈り物。
+君が存在するだけで、僕の世界はもっと明るく、温かく、美しくなる。<br><br>
+君を愛しすぎて、時々言葉が足りなくなる。君の笑顔が好き、
+君の声が好き、君の瞳が好き — そこに宇宙が見える。
+君のすべてが好き — 優しくて、美しくて、特別な君。<strong>君は僕に起きた最高のこと。</strong><br><br>
+君のそばにいたい、すべての瞬間に — 喜びの中でも静けさの中でも、
+晴れた日も寒い夜も。君のことを想いながら眠りにつき、
+君が僕のものだと知りながら目覚めたい。<br><br>
+君の毎日が幸せと温もりと愛で満たされますように。
+どれほど愛されているか、いつも感じていてほしい。
+なぜなら僕は君を愛し続けるから — <strong>心から、無限に、永遠に。</strong><br><br>
+君は僕のAzima。君は僕のすべて。♥ &nbsp;·&nbsp; 永遠に`;
+
+    const elRU = document.getElementById('letterRU');
+    const elJP = document.getElementById('letterJP');
+    elRU.innerHTML = letterRU;
+    elJP.innerHTML = letterJP;
+
+    // Lock wrap height to the taller of the two after render
+    requestAnimationFrame(() => {
+      const h = Math.max(elRU.offsetHeight, elJP.offsetHeight);
+      elRU.closest('.letter-wrap').style.height = h + 'px';
+    });
+
+    let letterIsRU = true;
+    setInterval(() => {
+      letterIsRU = !letterIsRU;
+      elRU.style.opacity = letterIsRU ? '1' : '0';
+      elJP.style.opacity = letterIsRU ? '0' : '1';
+    }, 3000);
+
+    /* ── Promise text switcher ── */
+    const promiseJP = `私はそばにいると約束する。<br>喜びの時も、困難な時も。<br>心から、強く、そして永遠に君を愛する。<br>君は私のアジマ。君は私の愛。`;
+    const promiseRU = `"Я обещаю быть рядом.<br>В радости и в трудностях.<br>Любить тебя — искренне, сильно, навсегда.<br>Ты моя Azima. Ты моя любовь."`;
+    const promiseEl = document.getElementById('promiseText');
+    let isJP = true;
+    promiseEl.innerHTML = promiseJP;
+
+    setInterval(() => {
+      promiseEl.classList.add('hidden');
+      setTimeout(() => {
+        isJP = !isJP;
+        promiseEl.innerHTML = isJP ? promiseJP : promiseRU;
+        promiseEl.classList.remove('hidden');
+      }, 600);
+    }, 3000);
+  </script>
+</body>
+</html>
